@@ -12,7 +12,7 @@ public class App
     {
         GameParser parser = new GameParser(2, 20, 5);
         try {
-			Game game = parser.parseGame((int) 3789415);
+			Game game = parser.parseGame((int) 3961829);
 			BasketballStatsService service = new MensCollegeService();
 			System.out.println("Done!");
 		} catch (IOException e) {

@@ -283,16 +283,16 @@ public class GameParser {
 				return foul;
 			case "Media Timeout":
 				Timeout mtimeout = new Timeout();
-				mtimeout.setType(getTimeoutType(TimeoutType.MEDIA));
+				mtimeout.setType(new TimeoutTypeDomain(TimeoutType.MEDIA));
 				return mtimeout;
 			case "30 Second Timeout":
 				Timeout timeout30 = new Timeout();
-				timeout30.setType(getTimeoutType(TimeoutType.THIRTY_SEC));
+				timeout30.setType(new TimeoutTypeDomain(TimeoutType.THIRTY_SEC));
 				return timeout30;
 			case "Timeout":
 			case "Team Timeout":
 				Timeout ftimeout = new Timeout();
-				ftimeout.setType(getTimeoutType(TimeoutType.FULL));
+				ftimeout.setType(new TimeoutTypeDomain(TimeoutType.FULL));
 				return ftimeout;
 			case "made Free Throw":
 				FreeThrow mdfreeThrow = new FreeThrow();
@@ -324,61 +324,61 @@ public class GameParser {
 				FieldGoal mdtipin = new FieldGoal();
 				mdtipin.setShooter(eventPlayer);
 				mdtipin.setMade(true);
-				mdtipin.setType(getShotType(ShotType.TIP_IN));
+				mdtipin.setType(new ShotTypeDomain(ShotType.TIP_IN));
 				return mdtipin;
 			case "missed Tip In":
 				FieldGoal mstipin = new FieldGoal();
 				mstipin.setShooter(eventPlayer);
 				mstipin.setMade(false);
-				mstipin.setType(getShotType(ShotType.TIP_IN));
+				mstipin.setType(new ShotTypeDomain(ShotType.TIP_IN));
 				return mstipin;
 			case "made Dunk":
 				FieldGoal mddunk = new FieldGoal();
 				mddunk.setShooter(eventPlayer);
 				mddunk.setMade(true);
-				mddunk.setType(getShotType(ShotType.DUNK));
+				mddunk.setType(new ShotTypeDomain(ShotType.DUNK));
 				return mddunk;
 			case "missed Dunk":
 				FieldGoal msdunk = new FieldGoal();
 				msdunk.setShooter(eventPlayer);
 				msdunk.setMade(false);
-				msdunk.setType(getShotType(ShotType.DUNK));
+				msdunk.setType(new ShotTypeDomain(ShotType.DUNK));
 				return msdunk;
 			case "made Layup":
 				FieldGoal mdlayup = new FieldGoal();
 				mdlayup.setShooter(eventPlayer);
 				mdlayup.setMade(true);
-				mdlayup.setType(getShotType(ShotType.LAYUP));
+				mdlayup.setType(new ShotTypeDomain(ShotType.LAYUP));
 				return mdlayup;
 			case "missed Layup":
 				FieldGoal mslayup = new FieldGoal();
 				mslayup.setShooter(eventPlayer);
 				mslayup.setMade(false);
-				mslayup.setType(getShotType(ShotType.LAYUP));
+				mslayup.setType(new ShotTypeDomain(ShotType.LAYUP));
 				return mslayup;
 			case "made Two Point Jumper":
 				FieldGoal mdjumper2 = new FieldGoal();
 				mdjumper2.setShooter(eventPlayer);
 				mdjumper2.setMade(true);
-				mdjumper2.setType(getShotType(ShotType.TWO_POINT_JUMPER));
+				mdjumper2.setType(new ShotTypeDomain(ShotType.TWO_POINT_JUMPER));
 				return mdjumper2;
 			case "missed Two Point Jumper":
 				FieldGoal msjumper2 = new FieldGoal();
 				msjumper2.setShooter(eventPlayer);
 				msjumper2.setMade(false);
-				msjumper2.setType(getShotType(ShotType.TWO_POINT_JUMPER));
+				msjumper2.setType(new ShotTypeDomain(ShotType.TWO_POINT_JUMPER));
 				return msjumper2;
 			case "made Three Point Jumper":
 				FieldGoal mdjumper3 = new FieldGoal();
 				mdjumper3.setShooter(eventPlayer);
 				mdjumper3.setMade(true);
-				mdjumper3.setType(getShotType(ShotType.THREE_POINT_JUMPER));
+				mdjumper3.setType(new ShotTypeDomain(ShotType.THREE_POINT_JUMPER));
 				return mdjumper3;
 			case "missed Three Point Jumper":
 				FieldGoal msjumper3 = new FieldGoal();
 				msjumper3.setShooter(eventPlayer);
 				msjumper3.setMade(false);
-				msjumper3.setType(getShotType(ShotType.THREE_POINT_JUMPER));
+				msjumper3.setType(new ShotTypeDomain(ShotType.THREE_POINT_JUMPER));
 				return msjumper3;
 			case "Enters Game":
 				Substitution subEnter = new Substitution();
@@ -467,7 +467,7 @@ public class GameParser {
 		}
 		String[] names = playerName.split(",\\s*");
 		
-		return new Player(playerName = WordUtils.capitalizeFully(names[1]),playerName = WordUtils.capitalizeFully(names[0]));
+		return new Player(WordUtils.capitalizeFully(names[1]),WordUtils.capitalizeFully(names[0]));
 	}
 	
 	/*
@@ -523,20 +523,11 @@ public class GameParser {
 
 	private Player convertToRosteredPlayer(Player player, List<Player> roster) {
 		for (Player rostered : roster) {
-			if (rostered.getFirstName().equals(player.getFirstName()) && rostered.getLastName().equals(player.getLastName())) {
+			if (rostered.getFirstName().replaceAll("[\\.\\-\']", "").equalsIgnoreCase(player.getFirstName().replaceAll("[\\.\\-\']", "")) && rostered.getLastName().replaceAll("[\\.\\-\']", "").equalsIgnoreCase(player.getLastName().replaceAll("[\\.\\-\']", ""))) {
 				return rostered;
 			}
 		}
 		return null;
 	}
-	
-	private TimeoutTypeDomain getTimeoutType(TimeoutType type) {//TODO make this grab the persisted TimeoutTypeDomain
-		return new TimeoutTypeDomain(type);
-	}
-	
-	private ShotTypeDomain getShotType(ShotType type) {//TODO make this grab the persisted ShotTypeDomain
-		return new ShotTypeDomain(type);
-	}
 
-	
 }
